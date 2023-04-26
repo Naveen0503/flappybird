@@ -46,9 +46,12 @@ if(gamehasstarted && obstacleleft >= -OBSTACLE_WIDTH)
 }
 else
 {
+  
   setobstacleleft(GAME_WIDTH-OBSTACLE_WIDTH);
   setobstacleheight(Math.floor(Math.random() * (GAME_HEIGHT-OBSTACLE_GAP)));
-  setscore(score => score + 1);
+  if (gamehasstarted) {
+    setscore((score) => score + 1);
+  }
 }
 },[gamehasstarted,obstacleleft]);
 
@@ -56,12 +59,13 @@ useEffect(() => {
   const hascollidedwithtopobstacle = birdposition >= 0 && birdposition < obstacleheight ;
   const hascollidedwithbottomobstacle = birdposition <= GAME_HEIGHT && birdposition >= GAME_HEIGHT - bottomobstacleheight ;
 
-  if( birdposition <= 0 || (obstacleleft >= 0 && obstacleleft <= OBSTACLE_WIDTH && 
+  if( birdposition <= 0 || birdposition >= GAME_HEIGHT - BIRD_SIZE || (obstacleleft >= 0 && obstacleleft <= OBSTACLE_WIDTH && 
     (hascollidedwithtopobstacle || hascollidedwithbottomobstacle)))
     {
+      setscore(0);
       setgamehasstarted(false)
       setvisibility(true)
-      setscore(0);
+      setbirdposition(250)
     }
 
 },[birdposition,obstacleheight,bottomobstacleheight,obstacleleft])
@@ -71,6 +75,7 @@ const handleclick = () =>{
   if(!gamehasstarted){
     setgamehasstarted(true);
     setvisibility(false);
+    
   }
   else if(newbirdposition < 0){
     setbirdposition(0)
